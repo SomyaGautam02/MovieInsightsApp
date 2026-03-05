@@ -1,0 +1,48 @@
+{
+  "header": {
+    "insightsTitle": "Insights",
+    "insightsSubtitle": "Track early buzz. Predict the hits."
+  },
+  "insights": {
+    "searchPlaceholder": "Search upcoming movies...",
+    "sectionTitle": "Upcoming in Theatres",
+    "filters": {
+      "week": "Week",
+      "month": "Month",
+      "next60": "60 Days",
+      "genre": "Genre"
+    },
+    "emptyList": "Even the best directors need another take. Let's try that search again."
+  },
+  "movieCard": {
+    "buzz": " Buzz",
+    "intent": " Intent",
+    "signalsThisWeek": "Signals this week: ",
+    "viewDeepInsights": "View Deep Insights"
+  },
+  "detail": {
+    "noMovieSelected": "No movie selected.",
+    "release": "Release:",
+    "buzz": "Buzz:",
+    "intent": "Intent:",
+    "theatre": "Theatre",
+    "ott": "OTT",
+    "timeframe7d": "7d",
+    "pulse": "Pulse",
+    "predictions": "Predictions",
+    "predictionsComingSoon": "Coming Soon",
+    "liveFrom": "Live from",
+    "rightNowIn": "Right now in"
+  },
+  "tabs": {
+    "home": "Home",
+    "social": "Social",
+    "explore": "Explore",
+    "chat": "Chat",
+    "profile": "Profile",
+    "insights": "Insights"
+  },
+  "common": {
+    "comingSoon": "Behind the scenes magic is happening here. This page is coming soon."
+  }
+}
