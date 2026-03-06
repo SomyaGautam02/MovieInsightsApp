@@ -7,6 +7,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
 import { ChevronDown, ChevronUp, TrendingUp, TrendingDown, Minus, Flame, Clock } from 'lucide-react-native';
 import { cityData, cityList } from '../data/cityData';
@@ -23,13 +24,6 @@ const YELLOW_FLAT = '#e5b020';
 
 const WaveSvg = () => (
   <Svg width="100%" height="80" viewBox="0 0 300 80" style={styles.waveSvg} preserveAspectRatio="none">
-    <Path
-      d="M0,40 Q75,10 150,40 T300,40"
-      stroke={GOLD_MUTED}
-      strokeWidth="2"
-      fill="none"
-      opacity={0.8}
-    />
     <Path
       d="M0,55 Q75,25 150,55 T300,55"
       stroke={GOLD_MUTED}
@@ -73,18 +67,25 @@ const CityInsightCard = ({ selectedCity, onCityChange, movieId = 'movie_1' }) =>
         onPress={() => setDropdownOpen((v) => !v)}
         activeOpacity={0.8}
       >
-        <View style={styles.liveRow}>
-          <View style={styles.liveDot} />
-          <Text style={styles.liveText}>Live from</Text>
-        </View>
-        <View style={styles.cityRow}>
-          <Text style={styles.cityName}>{city}</Text>
-          {dropdownOpen ? (
-            <ChevronUp size={18} color={GOLD} strokeWidth={2.5} />
-          ) : (
-            <ChevronDown size={18} color={GOLD} strokeWidth={2.5} />
-          )}
-        </View>
+        <LinearGradient
+          colors={['#6d5314', '#8c6c1a']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.cityInner}
+        >
+          <View style={styles.liveRow}>
+            <View style={styles.liveDot} />
+            <Text style={styles.liveText}>Live from</Text>
+          </View>
+          <View style={styles.cityRow}>
+            <Text style={styles.cityName}>{city}</Text>
+            {dropdownOpen ? (
+              <ChevronUp size={18} color="#ffffff" strokeWidth={2.5} />
+            ) : (
+              <ChevronDown size={18} color="#ffffff" strokeWidth={2.5} />
+            )}
+          </View>
+        </LinearGradient>
       </TouchableOpacity>
 
       {dropdownOpen ? (
@@ -137,34 +138,6 @@ const CityInsightCard = ({ selectedCity, onCityChange, movieId = 'movie_1' }) =>
         </View>
       </View>
 
-      <Text style={styles.cta}>But what's driving all this excitement?</Text>
-      
-      {/* Hype Boosts / Velocity */}
-      <View style={styles.hypeSection}>
-        <Text style={styles.sectionTitle}>What everyone got hyped</Text>
-
-        <View style={styles.hypeRowMain}>
-          <View style={[styles.velocityRing, { borderColor: hypeColor }]}>
-            <StatusIcon size={22} color={hypeColor} />
-          </View>
-          <View style={styles.hypeDetails}>
-            <View style={styles.hypeBoostRow}>
-              <Text style={[styles.boostText, { color: hypeColor }]}>{movie.boostText}</Text>
-              {showTrendingBadge ? (
-                <View style={[styles.badge, { backgroundColor: hypeColor }]}>
-                  <Flame size={12} color="#111" />
-                  <Text style={styles.badgeText}>Trending</Text>
-                </View>
-              ) : null}
-            </View>
-
-            <View style={styles.hypeBarTrack}>
-              <View style={[styles.hypeBarFill, { width: `${hypePct}%`, backgroundColor: hypeColor }]} />
-            </View>
-            <Text style={styles.insightText}>{movie.insightText}</Text>
-          </View>
-        </View>
-      </View>
     </View>
   );
 };
@@ -193,7 +166,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    alignSelf: 'stretch',
+    padding: 1,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: GOLD,
+    backgroundColor: 'transparent',
+    marginBottom: 16,
+  },
+  cityInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    paddingHorizontal: 18,
+    borderRadius: 8,
+    width: '100%',
   },
   liveRow: {
     flexDirection: 'row',
@@ -208,23 +196,20 @@ const styles = StyleSheet.create({
   },
   liveText: {
     fontSize: 14,
-    color: GOLD,
+    color: '#ffffff',
     fontWeight: '500',
   },
   cityRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderWidth: 1,
-    borderColor: GOLD,
-    borderRadius: 8,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
   cityName: {
     fontSize: 14,
     fontWeight: '700',
-    color: GOLD,
+    color: '#ffffff',
   },
   dropdown: {
     backgroundColor: '#1e1e22',
