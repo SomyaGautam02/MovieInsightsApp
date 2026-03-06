@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -16,9 +16,27 @@ import resources from '../resources';
 import PulseToggle from '../components/PulseToggle';
 import CityInsightCard from '../components/CityInsightCard';
 import CheckInModal from '../components/CheckInModal';
-import { setCheckinCompleted } from '../storage/checkinStorage';
+import {
+  setCheckinCompleted,
+  getStoredAnswers,
+  saveAnswerAndPoints,
+} from '../storage/checkinStorage';
 import { cityList } from '../data/cityData';
 import { getMovieHype } from '../data/movieHype';
+import { getMovieConfig } from '../config/movieConfig';
+import {
+  getQuestionsByPlacement,
+  PLACEMENT_ORDER,
+} from '../config/checkinQuestions';
+import HypeTrainSection from '../components/HypeTrainSection';
+import SentimentSection from '../components/SentimentSection';
+import HypeTrustGapSection from '../components/HypeTrustGapSection';
+import WarningSignsSection from '../components/WarningSignsSection';
+import AudienceChipsSection from '../components/AudienceChipsSection';
+import CitiesCraziestSection from '../components/CitiesCraziestSection';
+import HeatSliderSection from '../components/HeatSliderSection';
+import RecoBeeCallSection from '../components/RecoBeeCallSection';
+import QuestionBlock from '../components/QuestionBlock';
 
 const BG = '#141418';
 const TEXT = '#ffffff';
@@ -35,8 +53,46 @@ const DetailScreen = ({ route, navigation }) => {
   const [selectedCity, setSelectedCity] = useState('Mumbai');
   const [headerCityDropdownOpen, setHeaderCityDropdownOpen] = useState(false);
   const [checkInModalVisible, setCheckInModalVisible] = useState(false);
+   const [questionAnswers, setQuestionAnswers] = useState({});
 
   const movieId = paramMovieId ?? movie?.id ?? 'movie_1';
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadAnswers = async () => {
+      const stored = await getStoredAnswers(movieId);
+      if (isMounted) {
+        setQuestionAnswers(stored || {});
+      }
+    };
+    loadAnswers();
+    return () => {
+      isMounted = false;
+    };
+  }, [movieId]);
+
+  const movieConfig = getMovieConfig(movieId, selectedCity);
+
+  const handleQuestionAnswer = async (questionId, value, pointsToAdd) => {
+    setQuestionAnswers((prev) => ({
+      ...prev,
+      [questionId]: value,
+    }));
+    await saveAnswerAndPoints(movieId, questionId, value, pointsToAdd);
+  };
+
+  const renderQuestionsForPlacement = (placementKey) => {
+    const questions = getQuestionsByPlacement(placementKey);
+    if (!questions.length) return null;
+    return questions.map((q) => (
+      <QuestionBlock
+        key={q.id}
+        questionConfig={q}
+        savedAnswer={questionAnswers[q.id]}
+        onAnswer={handleQuestionAnswer}
+      />
+    ));
+  };
 
   if (!movie && !movieId) {
     return (
@@ -100,6 +156,32 @@ const DetailScreen = ({ route, navigation }) => {
               onCityChange={setSelectedCity}
               movieId={movieId}
             />
+            <HypeTrainSection
+              velocityConfig={movieConfig.velocityConfig}
+              hypeStatus={movieConfig.hypeStatus}
+            />
+            {renderQuestionsForPlacement('afterHypeTrain')}
+            <SentimentSection
+              sentimentConfig={movieConfig.sentimentConfig}
+              hypeStatus={movieConfig.hypeStatus}
+            />
+            {renderQuestionsForPlacement('afterSentiment')}
+            <HypeTrustGapSection hypeTrust={movieConfig.hypeTrust} />
+            <WarningSignsSection warnings={movieConfig.warnings} />
+            <CitiesCraziestSection
+              citiesCraziest={movieConfig.citiesCraziest}
+              footerText={movieConfig.citiesFooterText}
+            />
+            <AudienceChipsSection
+              audienceChips={movieConfig.audienceChips}
+              heading={movieConfig.audienceHeading}
+              subtext={movieConfig.audienceSubtext}
+              footer={movieConfig.audienceFooter}
+            />
+            {renderQuestionsForPlacement('afterAudienceChips')}
+            <HeatSliderSection heatLevel={movieConfig.heatLevel} />
+            <RecoBeeCallSection call={movieConfig.call} />
+            {renderQuestionsForPlacement('afterRecoBeeCall')}
             <TouchableOpacity
               style={styles.completeCheckInBtnWrap}
               onPress={() => setCheckInModalVisible(true)}
