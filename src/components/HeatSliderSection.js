@@ -16,7 +16,7 @@ const FOOTER = "We're in the hot zone. If this keeps up, opening weekend could s
  * Heat slider: LinearGradient (Blue -> #f4c430 -> Red). Fixed markers: Cold, Warm, Hot, Explosive.
  * White thumb positioned by heatLevel (0-100). blockVariant='temp' uses distinct block bg.
  */
-const HeatSliderSection = ({ heatLevel = 50, blockVariant }) => {
+const HeatSliderSection = ({ heatLevel = 50 }) => {
   const value = Math.min(100, Math.max(0, Number(heatLevel) || 0));
   const thumbLeftPercent = value;
   const activeIndex = value < 25 ? 0 : value < 50 ? 1 : value < 80 ? 2 : 3;
@@ -78,7 +78,10 @@ const HeatSliderSection = ({ heatLevel = 50, blockVariant }) => {
 export default HeatSliderSection;
 
 const styles = StyleSheet.create({
-  section: { marginTop: 0 },
+  section: {
+    marginTop: 16,
+    marginHorizontal: 16,
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '800',
@@ -91,9 +94,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   card: {
-    backgroundColor: 'transparent',
+    backgroundColor: '#252529',
     borderRadius: 12,
-    padding: 0,
+    padding: 16,
   },
   markers: {
     flexDirection: 'row',
